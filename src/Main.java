@@ -1,6 +1,8 @@
 public class Main {
     public static void main(String[] args)
     {
-        MainFrame mainFrame = new MainFrame();
+        World world = new World();
+        MainFrame mainFrame = new MainFrame(world);
+
     }
 }
