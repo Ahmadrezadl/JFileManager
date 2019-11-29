@@ -6,9 +6,10 @@ public class MainFrame extends JFrame {
     public MainFrame(World world){
         super("JFileManager");
         this.world = world;
-        this.setVisible(true);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setLayout(new BorderLayout());
-
+        TopPanel topPanel = new TopPanel(world);
+        this.add(topPanel,BorderLayout.NORTH);
+        this.setVisible(true);
     }
 }
