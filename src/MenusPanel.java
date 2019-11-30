@@ -1,10 +1,14 @@
 import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
 
 public class MenusPanel extends JPanel {
     private World world;
     public MenusPanel(World world)
     {
         super();
+        this.setBorder(BorderFactory.createLineBorder(Color.black));
+        this.setBackground(Color.WHITE);
         this.world = world;
         JMenuBar jMenuBar = new JMenuBar();
         this.setLayout(new BoxLayout(this,BoxLayout.X_AXIS));
