@@ -17,70 +17,88 @@ public class Logic {
     }
     public static void clickBack(){
         System.out.println("Back Button Clicked");
+        // TODO: 12/1/2019
     }
 
     public static void clickForward(){
         System.out.println("Forward Button Clicked");
+        // TODO: 12/1/2019
     }
 
     public static void clickUp() {
         System.out.println("Up Clicked");
+        /// TODO: 12/1/2019
     }
     public static void clickRefresh() {
         System.out.println("Refresh Clicked");
+        /// TODO: 12/1/2019
     }
 
     public static void enterSearch(String index){
         System.out.println("Searched " + index);
+        /// TODO: 12/1/2019
     }
 
     public static void enterUrl(String url)
     {
         System.out.println("URL: " + url);
+        // TODO: 12/1/2019
     }
 
     public static void createNewFile(){
         System.out.println("Create new file clicked");
+        // TODO: 12/1/2019
     }
 
     public static void createNewFolder(){
         System.out.println("Create new folder clicked");
+        // TODO: 12/1/2019
     }
 
     public static void deleteSelectedItems(){
         System.out.println("Delete selected items clicked");
+        // TODO: 12/1/2019
     }
 
     public static void rename(){
         System.out.println("rename clicked");
+        // TODO: 12/1/2019
     }
 
     public static void copy(){
         System.out.println("copy clicked");
+        // TODO: 12/1/2019
     }
 
     public static void cut(){
         System.out.println("cut clicked");
+        // TODO: 12/1/2019
     }
 
     public static void paste(){
         System.out.println("paste clicked");
+        // TODO: 12/1/2019
     }
 
     public static void aboutUs(){
         System.out.println("aboutUs clicked");
+        // TODO: 12/1/2019
     }
 
     public static void options(){
         System.out.println("options clicked");
+        // TODO: 12/1/2019
     }
 
     public static void info(){
         System.out.println("info clicked");
+        // TODO: 12/1/2019
     }
-    public static void changeUrl(String newUrl){
+    public void changeUrl(String newUrl){
+        search.setText(newUrl);
+    }
 
-    }
+    //Not For Logic-------------------------------------------------------------------------------
 
     public MainFrame getMainFrame() {
         return mainFrame;
