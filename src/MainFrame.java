@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 
 public class MainFrame extends JFrame {
     private Logic logic;
@@ -14,6 +15,9 @@ public class MainFrame extends JFrame {
         this.add(topPanel,BorderLayout.NORTH);
         LeftPanel leftPanel = new LeftPanel(logic);
         this.add(leftPanel,BorderLayout.WEST);
+        MiddlePanel middlePanel = new MiddlePanel(logic);
+        this.add(middlePanel,BorderLayout.CENTER);
         this.setVisible(true);
+
     }
 }

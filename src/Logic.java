@@ -11,6 +11,7 @@ public class Logic {
     private JTextField link;
     private JTextField search;
 
+
     public Logic(){
         fileSystemView = FileSystemView.getFileSystemView();
         desktop = Desktop.getDesktop();
@@ -94,9 +95,11 @@ public class Logic {
         System.out.println("info clicked");
         // TODO: 12/1/2019
     }
-    public void changeUrl(String newUrl){
+    public void changeUrlText(String newUrl){
         search.setText(newUrl);
     }
+
+
 
     //Not For Logic-------------------------------------------------------------------------------
 

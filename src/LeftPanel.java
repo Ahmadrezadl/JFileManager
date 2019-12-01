@@ -23,10 +23,13 @@ public class LeftPanel extends JPanel {
             for (File file : files) {
                 if (file.isDirectory()) {
                     DefaultMutableTreeNode n;
-                    if(file.toString().equals("This PC") || file.toString().equals("Network") || file.toString().equals("OneDrive") || file.toString().equals("Libraries"))
-                        n = new DefaultMutableTreeNode(file);
-                    else
-                        n= new DefaultMutableTreeNode(file.getName());
+                    Icon icon = logic.getFileSystemView().getSystemIcon(file);
+//                    if(file.toString().equals("This PC") || file.toString().equals("Network") || file.toString().equals("OneDrive") || file.toString().equals("Libraries"))
+//                        n = new DefaultMutableTreeNode(file);
+//                    else
+//                        n= new DefaultMutableTreeNode(file.getName());
+                    n = new DefaultMutableTreeNode(logic.getFileSystemView().getSystemDisplayName(file));
+
                     node.add(n);
                 }
             }
