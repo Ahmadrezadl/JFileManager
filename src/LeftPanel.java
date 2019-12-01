@@ -7,19 +7,19 @@ import java.util.ArrayList;
 
 
 public class LeftPanel extends JPanel {
-    private World world;
+    private Logic logic;
     ArrayList<DefaultMutableTreeNode> nodes;
-    public LeftPanel(World world)
+    public LeftPanel(Logic logic)
     {
         super();
         this.setLayout(new GridLayout(0,1,2,2));
-        File[] roots = world.getFileSystemView().getRoots();
+        File[] roots = logic.getFileSystemView().getRoots();
         nodes = new ArrayList<>();
         DefaultMutableTreeNode root = new DefaultMutableTreeNode();
         for (File fileSystemRoot : roots) {
             DefaultMutableTreeNode node = new DefaultMutableTreeNode(fileSystemRoot.getName());
             root.add( node );
-            File[] files = world.getFileSystemView().getFiles(fileSystemRoot, true);
+            File[] files = logic.getFileSystemView().getFiles(fileSystemRoot, true);
             for (File file : files) {
                 if (file.isDirectory()) {
                     DefaultMutableTreeNode n;
@@ -40,7 +40,7 @@ public class LeftPanel extends JPanel {
         tree.expandRow(0);
         JScrollPane treeScroll = new JScrollPane(tree);
         JScrollPane scroll = new JScrollPane(tree);
-        System.out.println(world.getMainFrame().getBounds().height);
+        System.out.println(logic.getMainFrame().getBounds().height);
         scroll.setPreferredSize(new Dimension(300, 300));
         this.add(scroll);
     }

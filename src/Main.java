@@ -9,8 +9,8 @@ public class Main {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
-        World world = new World();
-        new MainFrame(world);
-        System.out.println(world.getMainFrame().getBounds().height);
+        Logic logic = new Logic();
+        new MainFrame(logic);
+        System.out.println(logic.getMainFrame().getBounds().height);
     }
 }

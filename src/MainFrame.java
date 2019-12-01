@@ -2,17 +2,17 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
-    private World world;
-    public MainFrame(World world){
+    private Logic logic;
+    public MainFrame(Logic logic){
         super("JFileManager");
-        this.world = world;
-        world.setMainFrame(this);
+        this.logic = logic;
+        logic.setMainFrame(this);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setLayout(new BorderLayout());
-        TopPanel topPanel = new TopPanel(world);
-        world.setTopPanel(topPanel);
+        TopPanel topPanel = new TopPanel(logic);
+        logic.setTopPanel(topPanel);
         this.add(topPanel,BorderLayout.NORTH);
-        LeftPanel leftPanel = new LeftPanel(world);
+        LeftPanel leftPanel = new LeftPanel(logic);
         this.add(leftPanel,BorderLayout.WEST);
         this.setVisible(true);
     }

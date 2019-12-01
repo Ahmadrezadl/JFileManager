@@ -2,17 +2,16 @@ import javax.swing.*;
 import java.awt.*;
 
 public class TopPanel extends JPanel {
-    private World world;
-    public TopPanel(World world) {
+    private Logic logic;
+    public TopPanel(Logic logic) {
         super();
-        this.world = world;
+        this.logic = logic;
         this.setLayout(new BorderLayout());
-        MenusPanel menusPanel = new MenusPanel(world);
-        world.setMenusPanel(menusPanel);
+        MenusPanel menusPanel = new MenusPanel(logic);
+        logic.setMenusPanel(menusPanel);
         this.add(menusPanel,BorderLayout.NORTH);
-        TopBar topBar = new TopBar(world);
+        TopBar topBar = new TopBar(logic);
         this.add(topBar,BorderLayout.SOUTH);
     }
-
 
 }
