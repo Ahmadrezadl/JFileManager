@@ -42,7 +42,7 @@ public class TopBar extends JPanel {
         forward.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Logic.clickForward();
+                logic.clickForward();
             }
         });
         up.addActionListener(new ActionListener() {
@@ -55,7 +55,7 @@ public class TopBar extends JPanel {
         search.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Logic.enterSearch(search.getText());
+                logic.enterSearch(search.getText());
             }
         });
         link.addActionListener(new ActionListener() {

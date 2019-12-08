@@ -25,19 +25,19 @@ public class MenusPanel extends JPanel {
         newFile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Logic.createNewFile();
+                logic.createNewFile();
             }
         });
         newFolder.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Logic.createNewFolder();
+                logic.createNewFolder();
             }
         });
         delete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Logic.deleteSelectedItems();
+                logic.deleteSelectedItems();
             }
         });
 
@@ -52,25 +52,25 @@ public class MenusPanel extends JPanel {
         rename.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Logic.rename();
+                logic.rename();
             }
         });
         copy.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Logic.copy();
+                logic.copy();
             }
         });
         cut.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Logic.cut();
+                logic.cut();
             }
         });
         paste.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Logic.paste();
+                logic.paste();
             }
         });
 
@@ -84,19 +84,19 @@ public class MenusPanel extends JPanel {
         aboutUs.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Logic.aboutUs();
+                logic.aboutUs();
             }
         });
         options.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Logic.options();
+                logic.options();
             }
         });
         info.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Logic.info();
+                logic.info();
             }
         });
     }
