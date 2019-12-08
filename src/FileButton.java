@@ -4,40 +4,96 @@ import sun.awt.shell.ShellFolder;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-public class FileButton extends JButton{
+public class FileButton extends JPanel{
     private String name;
-    private ImageIcon icon;
+    private Icon icon;
     private File file;
     private double bytes;
-    private double kilobytes;
-    private double megabytes;
-    private double gigabytes;
+    private int kilobytes;
+    private int megabytes;
+    private int gigabytes;
+    private JButton button;
+    private JButton label;
+    private Logic logic;
     public FileButton(String link, Logic logic)
     {
         super();
+        this.logic = logic;
+        this.setLayout(new BorderLayout());
         file = new File(link);
         bytes = file.length();
-        kilobytes = (bytes / 1024);
+        kilobytes = (int) (bytes / 1024);
         megabytes = (kilobytes / 1024);
         gigabytes = (megabytes / 1024);
-        sun.awt.shell.ShellFolder sf;
+        button = new JButton();
         try {
-            sf = sun.awt.shell.ShellFolder.getShellFolder(file);
-            Icon icon = new ImageIcon(sf.getIcon(true));
-            this.setIcon(icon);
+
+            icon = new ImageIcon(getBufferedImage(file));
+            button.setIcon(icon);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        this.setBorderPainted(false);
-        this.setBorder(null);
-        this.setForeground(null);
-        this.setBackground(null);
-        this.setContentAreaFilled(false);
-        this.setToolTipText(kilobytes+"KB");
+        label = new JButton();
+        button.setBorderPainted(false);
+        button.setBorder(null);
+        button.setForeground(null);
+        button.setBackground(null);
+        button.setContentAreaFilled(false);
+        button.setToolTipText(kilobytes+"KB");
+        label.setBorderPainted(false);
+        label.setBorder(null);
+        label.setForeground(null);
+        label.setBackground(null);
+        label.setContentAreaFilled(false);
+        label.setToolTipText(kilobytes+"KB");
+        if(logic.getFileSystemView().getSystemDisplayName(file).length() >= 26)
+            label.setText("<html>" + logic.getFileSystemView().getSystemDisplayName(file).substring(0,12) +"<br>"+ logic.getFileSystemView().getSystemDisplayName(file).substring(12,25)   +"...</html>");
+        else if(logic.getFileSystemView().getSystemDisplayName(file).length() <=14)
+            label.setText("<html>" + logic.getFileSystemView().getSystemDisplayName(file)+"<br></html>");
+        else
+            label.setText("<html>" + logic.getFileSystemView().getSystemDisplayName(file).substring(0,12) +"<br>"+ logic.getFileSystemView().getSystemDisplayName(file).substring(12) + "</html>");
+        this.add(button,BorderLayout.NORTH);
+        this.add(label,BorderLayout.SOUTH);
+        button.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    if (file.isDirectory())
+                        logic.goDirectory(file);
+                    else
+                        logic.openFile(file);
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+        this.setVisible(true);
     }
 
     public boolean isDirectory(){
@@ -46,6 +102,9 @@ public class FileButton extends JButton{
     public boolean isFile(){
         return file.isFile();
     }
+
+
+
     private Image getScaledImage(Image srcImg, int w, int h){
         BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = resizedImg.createGraphics();
@@ -62,13 +121,13 @@ public class FileButton extends JButton{
         BufferedImage im = new BufferedImage(icon.getWidth(null),
                 icon.getHeight(null), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = im.createGraphics();
-        g.drawImage(icon, -10, -10, null);
+        g.drawImage(icon, 0, 0, null);
         g.dispose();
         int width = im.getWidth();
         int height = im.getHeight();
         System.out.println(width);
         System.out.println(height);
-        final int maxHeight = 120;
+        final int maxHeight = 100;
         double scaleValue = 0;
         if (height > width)
             scaleValue = 100;

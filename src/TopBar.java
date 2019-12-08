@@ -36,7 +36,7 @@ public class TopBar extends JPanel {
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Logic.clickBack();
+                logic.clickBack();
             }
         });
         forward.addActionListener(new ActionListener() {
@@ -48,7 +48,7 @@ public class TopBar extends JPanel {
         up.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Logic.clickUp();
+                logic.clickUp();
 
             }
         });
@@ -61,14 +61,14 @@ public class TopBar extends JPanel {
         link.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Logic.enterUrl(link.getText());
+                logic.enterUrl(link.getText());
             }
         });
         refresh.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                Logic.clickRefresh();
+                logic.clickRefresh();
             }
         });
     }

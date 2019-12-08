@@ -11,6 +11,6 @@ public class Main {
         }
         Logic logic = new Logic();
         new MainFrame(logic);
-        System.out.println(logic.getMainFrame().getBounds().height);
+
     }
 }

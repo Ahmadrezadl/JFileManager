@@ -4,6 +4,7 @@ import java.io.File;
 
 public class MainFrame extends JFrame {
     private Logic logic;
+    public JScrollPane scrollPane;
     public MainFrame(Logic logic){
         super("JFileManager");
         this.logic = logic;
@@ -15,8 +16,8 @@ public class MainFrame extends JFrame {
         this.add(topPanel,BorderLayout.NORTH);
         LeftPanel leftPanel = new LeftPanel(logic);
         this.add(leftPanel,BorderLayout.WEST);
-        MiddlePanel middlePanel = new MiddlePanel(logic);
-        this.add(middlePanel,BorderLayout.CENTER);
+        scrollPane = new JScrollPane(new MiddlePanel(logic,new File(System.getProperty("user.home"))));
+        this.add(scrollPane,BorderLayout.CENTER);
         this.setVisible(true);
 
     }

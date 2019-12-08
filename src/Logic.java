@@ -1,8 +1,11 @@
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 public class Logic {
+    private MiddlePanel middlePanel;
     private MainFrame mainFrame;
     private MenusPanel menusPanel;
     private TopPanel topPanel;
@@ -16,9 +19,19 @@ public class Logic {
         fileSystemView = FileSystemView.getFileSystemView();
         desktop = Desktop.getDesktop();
     }
-    public static void clickBack(){
-        System.out.println("Back Button Clicked");
-        // TODO: 12/1/2019
+
+    public void clickBack(){
+         goDirectory(middlePanel.dir.getParentFile());
+    }
+
+
+
+    public MiddlePanel getMiddlePanel() {
+        return middlePanel;
+    }
+
+    public void setMiddlePanel(MiddlePanel middlePanel) {
+        this.middlePanel = middlePanel;
     }
 
     public static void clickForward(){
@@ -26,13 +39,11 @@ public class Logic {
         // TODO: 12/1/2019
     }
 
-    public static void clickUp() {
-        System.out.println("Up Clicked");
-        /// TODO: 12/1/2019
+    public void clickUp() {
+        goDirectory(middlePanel.dir.getParentFile());
     }
-    public static void clickRefresh() {
-        System.out.println("Refresh Clicked");
-        /// TODO: 12/1/2019
+    public void clickRefresh() {
+        goDirectory(middlePanel.dir);
     }
 
     public static void enterSearch(String index){
@@ -40,10 +51,9 @@ public class Logic {
         /// TODO: 12/1/2019
     }
 
-    public static void enterUrl(String url)
+    public  void enterUrl(String url)
     {
-        System.out.println("URL: " + url);
-        // TODO: 12/1/2019
+        goDirectory(new File(url));
     }
 
     public static void createNewFile(){
@@ -157,5 +167,20 @@ public class Logic {
 
     public void setSearch(JTextField search) {
         this.search = search;
+    }
+
+    public void goDirectory(File file) {
+        mainFrame.scrollPane.getViewport().remove(middlePanel);
+        mainFrame.scrollPane.getViewport().add(new JScrollPane(new MiddlePanel(this,file)),BorderLayout.CENTER);
+        mainFrame.setVisible(true);
+        middlePanel.setVisible(true);
+    }
+
+    public void openFile(File file) {
+        try {
+            desktop.open(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
