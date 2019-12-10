@@ -5,9 +5,15 @@ import GUI.*;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class Logic {
     private MiddlePanel middlePanel;
@@ -19,11 +25,31 @@ public class Logic {
     private JTextField link;
     private JTextField search;
     private FileButton selectedFile;
-
+    public KeyListener focusManager;
 
     public Logic(){
         fileSystemView = FileSystemView.getFileSystemView();
         desktop = Desktop.getDesktop();
+        focusManager = new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                    KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+                    manager.focusNextComponent();
+                    System.out.println("Kir");
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        };
     }
 
     public void clickBack(){
@@ -255,11 +281,35 @@ public class Logic {
         this.search = search;
     }
 
+    public void showProperties()
+    {
+        BasicFileAttributes infos = null;
+        try {
+            infos = Files.readAttributes(selectedFile.getFile().toPath(), BasicFileAttributes.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        long milliseconds = infos.creationTime().to(TimeUnit.MILLISECONDS);
+        Date creationDate = null;
+        if((milliseconds > Long.MIN_VALUE) && (milliseconds < Long.MAX_VALUE))
+        {
+            creationDate =
+                    new Date(infos.creationTime().to(TimeUnit.MILLISECONDS));
+
+        }
+        String created = creationDate.getDate()+ "/" +
+                (creationDate.getMonth() + 1) + "/" +
+                (creationDate.getYear() + 1900);
+        String size = ""+selectedFile.megabytes + "MB (" +
+                selectedFile.kilobytes + " KiloBytes)";
+        if(selectedFile.isDirectory())
+        Methods.showProperties("Folder",selectedFile.getFile().getAbsolutePath(),size,
+                created,selectedFile.getNumFiles()+ "Files , "  + selectedFile.getNumFolders() + " Folders");
+    }
     public void goDirectory(File file) {
         mainFrame.scrollPane.getViewport().remove(middlePanel);
         mainFrame.setVisible(true);
         middlePanel.setVisible(true);
-
         mainFrame.scrollPane.getViewport().add(new MiddlePanel(this,file,""),BorderLayout.CENTER);
         mainFrame.setVisible(true);
         middlePanel.setVisible(true);

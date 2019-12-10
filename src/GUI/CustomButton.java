@@ -61,4 +61,13 @@ public class CustomButton extends JButton {
             }
         });
     }
+    public CustomButton()
+    {
+        super();
+        setBorderPainted(false);
+        setBorder(null);
+        setForeground(null);
+        setBackground(null);
+        setContentAreaFilled(false);
+    }
 }

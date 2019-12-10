@@ -1,31 +1,33 @@
 package GUI;
 
 import Logic.Logic;
+import Logic.Methods;
 import sun.awt.shell.ShellFolder;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class FileButton extends JPanel{
     private String name;
     private Icon icon;
     private File file;
-    private double bytes;
-    private int kilobytes;
-    private int megabytes;
-    private int gigabytes;
+    public int kilobytes;
+    public int megabytes;
     private JButton button;
     private JButton label;
     private Logic logic;
+    private int numFiles = 0;
+    private int numFolders = 0;
     public FileButton(String link, Logic logic)
     {
         super();
@@ -34,10 +36,18 @@ public class FileButton extends JPanel{
         this.setBackground(Color.WHITE);
         this.setLayout(new BorderLayout());
         file = new File(link);
-        bytes = file.length();
+        if(file.isDirectory())
+        {
+                File[] files = logic.getFileSystemView().getFiles(file, true);
+                for(File file : files)
+                {
+                    if(file.isDirectory())numFolders++;
+                    else numFiles++;
+                }
+        }
+        double bytes = file.length();
         kilobytes = (int) (bytes / 1024);
         megabytes = (kilobytes / 1024);
-        gigabytes = (megabytes / 1024);
         button = new JButton();
         JPopupMenu popupMenu = new JPopupMenu();
         ActionListener hideMenu = new ActionListener() {
@@ -83,6 +93,16 @@ public class FileButton extends JPanel{
         });
         popupMenu.add(delete);
 
+        JMenuItem properties = new JMenuItem("Properties");
+        properties.addActionListener(hideMenu);
+        properties.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                logic.showProperties();
+            }
+        });
+        popupMenu.add(properties);
+
 
         try {
 
@@ -96,9 +116,35 @@ public class FileButton extends JPanel{
         button.setBorder(null);
         button.setForeground(null);
         button.setBackground(null);
-        button.setFocusable(false);
+//        button.setFocusable(false);
+        button.setFocusPainted(false);
         button.setContentAreaFilled(false);
-        button.setToolTipText(kilobytes+"KB");
+        BasicFileAttributes infos = null;
+
+        try {
+            infos = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+            long milliseconds = infos.creationTime().to(TimeUnit.MILLISECONDS);
+            Date creationDate = null;
+            if((milliseconds > Long.MIN_VALUE) && (milliseconds < Long.MAX_VALUE))
+            {
+                 creationDate =
+                        new Date(infos.creationTime().to(TimeUnit.MILLISECONDS));
+
+            }
+            if(file.isDirectory())
+            button.setToolTipText("<html>Date Created: " + creationDate.getDate()+ "/" +
+                    (creationDate.getMonth() + 1) + "/" +
+                    (creationDate.getYear() + 1900) +
+                    "<br>Size: " + kilobytes+"KB" +
+                    "<br>Folders: " + numFolders+ "<br>Files:"+ numFiles + "</html>");
+            else
+                button.setToolTipText("<html>Date Created: " + creationDate.getDate()+ "/" +
+                        (creationDate.getMonth() + 1) + "/" +
+                        (creationDate.getYear() + 1900) +
+                        "<br>Size: " + kilobytes+"KB" + "</html>");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         label.setBorderPainted(false);
         label.setFocusable(false);
         label.setBorder(null);
@@ -133,6 +179,7 @@ public class FileButton extends JPanel{
                 if (logic.getSelectedFile() != null)
                     logic.getSelectedFile().setBackground(Color.WHITE);
                 logic.setSelectedFile(self);
+                button.requestFocus();
                 self.setBackground(new Color(0x3500A3));
             }
 
@@ -184,6 +231,56 @@ public class FileButton extends JPanel{
 
             @Override
             public void mouseExited(MouseEvent e) {
+
+            }
+        });
+        button.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (logic.getSelectedFile() != null)
+                    logic.getSelectedFile().setBackground(Color.WHITE);
+                logic.setSelectedFile(self);
+                self.setBackground(new Color(0x3500A3));
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+
+            }
+        });
+        button.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+                if(e.getKeyCode() == KeyEvent.VK_RIGHT)
+                {
+                    manager.focusNextComponent();
+                }
+                if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
+                {
+                    logic.clickUp();
+                }
+                if(e.getKeyCode() == KeyEvent.VK_LEFT)
+                {
+                    manager.focusPreviousComponent();
+                }
+                if(e.getKeyCode() == KeyEvent.VK_ENTER)
+                {
+                    if (file.isDirectory())
+                        logic.goDirectory(file);
+                    else
+                        logic.openFile(file);
+                }
 
             }
         });
@@ -249,5 +346,13 @@ public class FileButton extends JPanel{
                 im.getHeight(), null);
         g.dispose();
         return resized;
+    }
+
+    public int getNumFiles() {
+        return numFiles;
+    }
+
+    public int getNumFolders() {
+        return numFolders;
     }
 }

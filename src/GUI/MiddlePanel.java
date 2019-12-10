@@ -6,18 +6,37 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 
-public class MiddlePanel extends JPanel {
+public class MiddlePanel extends JPanel{
     private Logic logic;
     public File dir;
     public MiddlePanel(Logic logic,File f,String search){
         super();
+        CustomButton key = new CustomButton();
+        key.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
 
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
+                {
+                    logic.clickUp();
+                }
+            }
+        });
         this.logic = logic;
         this.dir = f;
         this.setBackground(Color.WHITE);
         logic.setMiddlePanel(this);
         NewFlowLayout layout = new NewFlowLayout(FlowLayout.LEFT);
-
+        this.add(key);
         this.setLayout(layout);
         try{
             File[] files = logic.getFileSystemView().getFiles(f, true);
@@ -40,26 +59,21 @@ public class MiddlePanel extends JPanel {
                 addFile(file.getPath());
             }
         }
-//        Logic.getLoadingBar().setValue(100);
         if(logic.getMainFrame().scrollPane != null)
             logic.getMainFrame().scrollPane.setVisible(true);
-
         this.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (logic.getSelectedFile() != null)
                     logic.getSelectedFile().setBackground(Color.WHITE);
+                key.requestFocus();
                 logic.setSelectedFile(null);
                 if (e.getButton()== MouseEvent.BUTTON3)
                 {
                     JPopupMenu file = new JPopupMenu();
                     JMenuItem newFile = new JMenuItem("Create New File");
-                    newFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK));
                     JMenuItem newFolder = new JMenuItem("Create New Folder");
-                    newFolder.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.CTRL_DOWN_MASK));
-                    JMenuItem delete = new JMenuItem("Delete Selected Item(s)");
-                    delete.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_DOWN_MASK));
-                    file.add(newFile); file.add(newFolder); file.add(delete);
+                    file.add(newFile); file.add(newFolder);
                     newFile.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
@@ -70,12 +84,6 @@ public class MiddlePanel extends JPanel {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             logic.createNewFolder();
-                        }
-                    });
-                    delete.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            logic.deleteSelectedItems();
                         }
                     });
                     file.show(e.getComponent(), e.getX(), e.getY());
@@ -110,5 +118,6 @@ public class MiddlePanel extends JPanel {
         FileButton f = new FileButton(link,logic);
         this.add(f);
     }
+
 
 }
