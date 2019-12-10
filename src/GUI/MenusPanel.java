@@ -1,7 +1,12 @@
+package GUI;
+
+import Logic.Logic;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 public class MenusPanel extends JPanel {
     private Logic logic;
@@ -19,8 +24,11 @@ public class MenusPanel extends JPanel {
         JMenu file = new JMenu("File",true);
         jMenuBar.add(file);
         JMenuItem newFile = new JMenuItem("Create New File");
+        newFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK));
         JMenuItem newFolder = new JMenuItem("Create New Folder");
+        newFolder.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.CTRL_DOWN_MASK));
         JMenuItem delete = new JMenuItem("Delete Selected Item(s)");
+        delete.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_DOWN_MASK));
         file.add(newFile); file.add(newFolder); file.add(delete);
         newFile.addActionListener(new ActionListener() {
             @Override
@@ -45,9 +53,13 @@ public class MenusPanel extends JPanel {
         JMenu edit = new JMenu("Edit",true);
         jMenuBar.add(edit);
         JMenuItem rename = new JMenuItem("Rename Item");
+        rename.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.CTRL_DOWN_MASK));
         JMenuItem copy = new JMenuItem("Copy");
+        copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK));
         JMenuItem cut = new JMenuItem("Cut");
+        cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_DOWN_MASK));
         JMenuItem paste = new JMenuItem("Paste");
+        paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_DOWN_MASK));
         edit.add(rename); edit.add(copy); edit.add(cut); edit.add(paste);
         rename.addActionListener(new ActionListener() {
             @Override

@@ -1,8 +1,11 @@
+package Logic;
+
+import GUI.*;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -15,6 +18,7 @@ public class Logic {
     private Desktop desktop;
     private JTextField link;
     private JTextField search;
+    private FileButton selectedFile;
 
 
     public Logic(){
@@ -27,7 +31,10 @@ public class Logic {
     }
 
 
+    public void setVisibility ()
+    {
 
+    }
     public MiddlePanel getMiddlePanel() {
         return middlePanel;
     }
@@ -48,19 +55,42 @@ public class Logic {
         goDirectory(middlePanel.dir);
     }
 
-    public  void enterSearch(String index){
-        System.out.println("Searched " + index);
-        /// TODO: 12/1/2019
+    public  void enterSearch(File file,String index){
+        mainFrame.scrollPane.getViewport().remove(middlePanel);
+        mainFrame.scrollPane.getViewport().add(new JScrollPane(new MiddlePanel(this,file,index)),BorderLayout.CENTER);
+        mainFrame.setVisible(true);
+        middlePanel.setVisible(true);
+    }
+
+    public FileButton getSelectedFile() {
+        return selectedFile;
+    }
+
+    public void setSelectedFile(FileButton selectedFile) {
+        this.selectedFile = selectedFile;
     }
 
     public  void enterUrl(String url)
     {
-        goDirectory(new File(url));
+        File f = new File(url);
+        if (!f.isDirectory())
+        {
+            if(f.isFile())
+                openFile(f);
+            else
+                goDirectory(null);
+        }
+        else
+        {
+            goDirectory(f);
+        }
+
+
     }
 
     public void createNewFile() {
         String name = JOptionPane.showInputDialog("Enter Name of your new file: " , "New File");
-        if (!(name.equals("") || name.equals(" "))) {
+        if (!name.equals("")) {
             try{
                 boolean duplicate = false;
                 for (File f : fileSystemView.getFiles(middlePanel.dir , true)) {
@@ -88,21 +118,94 @@ public class Logic {
                         JOptionPane.WARNING_MESSAGE);
             }
         }
+        clickRefresh();
+        middlePanel.setVisible(true);
     }
 
     public  void createNewFolder(){
-        System.out.println("Create new folder clicked");
-        // TODO: 12/1/2019
+        String name = JOptionPane.showInputDialog("Enter Name of your new folder: " , "New Folder");
+        if (!name.equals("")) {
+            try{
+                boolean duplicate = false;
+                for (File f : fileSystemView.getFiles(middlePanel.dir , true)) {
+                    if (f.getName().equals(name)) {
+                        duplicate = true;
+                        break;
+                    }
+                }
+                if (duplicate) {
+                    JOptionPane.showMessageDialog(null ,
+//                        good thinking!!
+                            "Folder Exists. Choose another name." ,
+                            "Name is Duplicate" ,
+                            JOptionPane.WARNING_MESSAGE);
+                } else {
+                    File f = new File(middlePanel.dir + "\\" + name);
+                    f.mkdir();
+
+                }
+            }
+            catch (Exception e)
+            {
+                JOptionPane.showMessageDialog(null ,
+//                        good thinking!!
+                        e ,
+                        "Cannot create file" ,
+                        JOptionPane.WARNING_MESSAGE);
+            }
+        }
+        middlePanel.setVisible(true);
+        mainFrame.scrollPane.setVisible(true);
+        clickRefresh();
+
     }
 
     public  void deleteSelectedItems(){
-        System.out.println("Delete selected items clicked");
-        // TODO: 12/1/2019
+        String[]entries = selectedFile.getFile().list();
+        if (entries != null) {
+            for(String s: entries){
+                File currentFile = new File(selectedFile.getFile().getPath(),s);
+                 currentFile.delete();
+            }
+        }
+        boolean res = selectedFile.getFile().delete();
+        if(!res)
+            showErrorMessage("You can't Delete this file","Error!");
+        else
+        selectedFile.setVisible(false);
     }
 
     public  void rename(){
-        System.out.println("rename clicked");
-        // TODO: 12/1/2019
+        if (selectedFile==null) {
+            showErrorMessage("No file selected to rename.","Select File");
+            return;
+        }
+
+        String renameTo = JOptionPane.showInputDialog("Choose new name",getSelectedFile().getName());
+        if (renameTo!=null) {
+            File newFileName = new File(getSelectedFile().getFile().getParent() + "\\" + renameTo);
+            boolean res = selectedFile.getFile().renameTo(newFileName);
+            if(!res)
+                showErrorMessage("You can't rename this file to this name" , "Rename not completed!");
+            else
+            selectedFile.setName(renameTo);
+        }
+        getSelectedFile().setVisible(true);
+    }
+    public void rename(FileButton self) {
+
+        if (self==null) {
+            showErrorMessage("No file selected to rename.","Select File");
+            return;
+        }
+
+        String renameTo = JOptionPane.showInputDialog("Choose new name",getSelectedFile().getName());
+        if (renameTo!=null) {
+            File newFileName = new File(getSelectedFile().getFile().getParent() + "\\" + renameTo);
+            self.getFile().renameTo(newFileName);
+            self.setName(renameTo);
+        }
+        self.setVisible(true);
     }
 
     public  void copy(){
@@ -116,8 +219,6 @@ public class Logic {
     }
 
     public  void paste(){
-        System.out.println("paste clicked");
-        // TODO: 12/1/2019
     }
 
     public  void aboutUs(){
@@ -156,7 +257,10 @@ public class Logic {
 
     public void goDirectory(File file) {
         mainFrame.scrollPane.getViewport().remove(middlePanel);
-        mainFrame.scrollPane.getViewport().add(new JScrollPane(new MiddlePanel(this,file)),BorderLayout.CENTER);
+        mainFrame.setVisible(true);
+        middlePanel.setVisible(true);
+
+        mainFrame.scrollPane.getViewport().add(new MiddlePanel(this,file,""),BorderLayout.CENTER);
         mainFrame.setVisible(true);
         middlePanel.setVisible(true);
     }
@@ -169,11 +273,21 @@ public class Logic {
         }
     }
 
+    private void showErrorMessage(String errorMessage, String errorTitle) {
+        JOptionPane.showMessageDialog(
+                mainFrame,
+                errorMessage,
+                errorTitle,
+                JOptionPane.ERROR_MESSAGE
+        );
+    }
+
     //Not For Logic-------------------------------------------------------------------------------
 
     public MainFrame getMainFrame() {
         return mainFrame;
     }
+
 
     public void setMainFrame(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
@@ -210,6 +324,7 @@ public class Logic {
     public void setDesktop(Desktop desktop) {
         this.desktop = desktop;
     }
+
 
 
 }
