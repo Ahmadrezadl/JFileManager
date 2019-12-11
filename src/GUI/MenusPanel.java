@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 public class MenusPanel extends JPanel {
     private Logic logic;
@@ -82,7 +83,11 @@ public class MenusPanel extends JPanel {
         paste.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                logic.paste();
+                try {
+                    logic.paste();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
 

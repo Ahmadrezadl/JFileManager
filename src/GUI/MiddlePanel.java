@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
 
 public class MiddlePanel extends JPanel{
     private Logic logic;
@@ -77,7 +78,8 @@ public class MiddlePanel extends JPanel{
                     JPopupMenu file = new JPopupMenu();
                     JMenuItem newFile = new JMenuItem("Create New File");
                     JMenuItem newFolder = new JMenuItem("Create New Folder");
-                    file.add(newFile); file.add(newFolder);
+                    JMenuItem paste = new JMenuItem("Paste here");
+                    file.add(newFile); file.add(newFolder); file.add(paste);
                     newFile.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
@@ -88,6 +90,16 @@ public class MiddlePanel extends JPanel{
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             logic.createNewFolder();
+                        }
+                    });
+                    paste.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            try {
+                                logic.paste();
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
                         }
                     });
                     file.show(e.getComponent(), e.getX(), e.getY());

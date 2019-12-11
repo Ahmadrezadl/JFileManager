@@ -7,10 +7,9 @@ import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,11 +29,15 @@ public class Logic {
     public KeyListener focusManager;
     public int where;
     private Memento memento;
+    private JLabel fileInfo;
+    private File copiedFile;
+    private boolean cuted;
 
     public Logic(){
         fileSystemView = FileSystemView.getFileSystemView();
         desktop = Desktop.getDesktop();
         where = 0;
+        cuted = false;
         memento = new Memento();
         addresses = new ArrayList<>();
         focusManager = new KeyListener() {
@@ -222,6 +225,7 @@ public class Logic {
         return  file.delete();
     }
 
+
     public  void rename(){
         if (selectedFile==null) {
             showErrorMessage("No file selected to rename.","Select File");
@@ -256,16 +260,43 @@ public class Logic {
     }
 
     public  void copy(){
-        System.out.println("copy clicked");
-        // TODO: 12/1/2019
+        copiedFile = selectedFile.getFile();
+        cuted = false;
     }
 
     public  void cut(){
-        System.out.println("cut clicked");
-        // TODO: 12/1/2019
+        copiedFile = selectedFile.getFile();
+        cuted = true;
     }
 
-    public  void paste(){
+    public  void paste() throws IOException{
+        if(cuted)
+        {
+            copiedFile.renameTo(new File(middlePanel.dir.getAbsoluteFile() + "\\" + copiedFile.getName()));
+        }
+        else
+        {
+            InputStream is = null;
+            OutputStream os = null;
+            try {
+                is = new FileInputStream(copiedFile);
+                os = new FileOutputStream(middlePanel.dir.getAbsoluteFile() + "\\" + "Copy of " + copiedFile.getName());
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = is.read(buffer)) > 0) {
+                    os.write(buffer, 0, length);
+                }
+            } finally {
+                if (is != null) {
+                    is.close();
+                }
+                if (os != null) {
+                    os.close();
+                }
+            }
+
+        }
+        clickRefresh();
     }
 
     public  void aboutUs(){
@@ -409,5 +440,11 @@ public class Logic {
     }
 
 
+    public void setFileInfo(JLabel fileInfo) {
+        this.fileInfo = fileInfo;
+    }
 
+    public JLabel getFileInfo() {
+        return fileInfo;
+    }
 }

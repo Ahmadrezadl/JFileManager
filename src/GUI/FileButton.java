@@ -74,6 +74,27 @@ public class FileButton extends JPanel{
         });
         popupMenu.add(open);
 
+        JMenuItem copy = new JMenuItem("Copy");
+        copy.addActionListener(hideMenu);
+        copy.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                logic.copy();
+            }
+        });
+        popupMenu.add(copy);
+
+        JMenuItem cut = new JMenuItem("Cut");
+        cut.addActionListener(hideMenu);
+        cut.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                logic.cut();
+            }
+        });
+        popupMenu.add(cut);
+
+
 
         JMenuItem rename = new JMenuItem("Rename");
         rename.addActionListener(hideMenu);
@@ -95,6 +116,7 @@ public class FileButton extends JPanel{
             }
         });
         popupMenu.add(delete);
+
 
         JMenuItem properties = new JMenuItem("Properties");
         properties.addActionListener(hideMenu);
@@ -172,7 +194,10 @@ public class FileButton extends JPanel{
                 else {
                     if (e.getClickCount() == 2) {
                         if (file.isDirectory())
+                        {
+                            logic.getMemento().addRight(logic.getMiddlePanel().dir.getAbsolutePath());
                             logic.goDirectory(file);
+                        }
                         else
                             logic.openFile(file);
                     }
@@ -280,7 +305,10 @@ public class FileButton extends JPanel{
                 if(e.getKeyCode() == KeyEvent.VK_ENTER)
                 {
                     if (file.isDirectory())
+                    {
+                        logic.getMemento().addRight(logic.getMiddlePanel().dir.getAbsolutePath());
                         logic.goDirectory(file);
+                    }
                     else
                         logic.openFile(file);
                 }
