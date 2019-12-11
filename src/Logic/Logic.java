@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -25,11 +26,17 @@ public class Logic {
     private JTextField link;
     private JTextField search;
     private FileButton selectedFile;
+    public ArrayList<String> addresses;
     public KeyListener focusManager;
+    public int where;
+    private Memento memento;
 
     public Logic(){
         fileSystemView = FileSystemView.getFileSystemView();
         desktop = Desktop.getDesktop();
+        where = 0;
+        memento = new Memento();
+        addresses = new ArrayList<>();
         focusManager = new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -41,7 +48,6 @@ public class Logic {
                 if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                     KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
                     manager.focusNextComponent();
-                    System.out.println("Kir");
                 }
             }
 
@@ -53,7 +59,7 @@ public class Logic {
     }
 
     public void clickBack(){
-         goDirectory(middlePanel.dir.getParentFile());
+        goDirectory(new File(memento.goLeft(middlePanel.dir.getAbsolutePath())));
     }
 
 
@@ -70,11 +76,11 @@ public class Logic {
     }
 
     public void clickForward(){
-        System.out.println("Forward Button Clicked");
-        // TODO: 12/1/2019
+        goDirectory(new File(memento.goRight()));
     }
 
     public void clickUp() {
+        memento.addRight(middlePanel.dir.getAbsolutePath());
         goDirectory(middlePanel.dir.getParentFile());
     }
     public void clickRefresh() {
@@ -187,18 +193,33 @@ public class Logic {
     }
 
     public  void deleteSelectedItems(){
-        String[]entries = selectedFile.getFile().list();
-        if (entries != null) {
-            for(String s: entries){
-                File currentFile = new File(selectedFile.getFile().getPath(),s);
-                 currentFile.delete();
-            }
+        int dialogResult = JOptionPane.showConfirmDialog (null, "Would You Like to Delete this File?","Warning",JOptionPane.YES_NO_OPTION);
+        if(dialogResult != JOptionPane.YES_OPTION)
+            return;
+        boolean res;
+        if (selectedFile.isDirectory())
+        {
+            res = deleteDir(selectedFile.getFile());
+             selectedFile.getFile().delete();
         }
-        boolean res = selectedFile.getFile().delete();
+        else
+             res = selectedFile.getFile().delete();
         if(!res)
             showErrorMessage("You can't Delete this file","Error!");
         else
         selectedFile.setVisible(false);
+    }
+
+    private boolean deleteDir(File file) {
+        File[] contents = file.listFiles();
+        if (contents != null) {
+            for (File f : contents) {
+                if (! Files.isSymbolicLink(f.toPath())) {
+                    deleteDir(f);
+                }
+            }
+        }
+        return  file.delete();
     }
 
     public  void rename(){
@@ -305,6 +326,9 @@ public class Logic {
         if(selectedFile.isDirectory())
         Methods.showProperties("Folder",selectedFile.getFile().getAbsolutePath(),size,
                 created,selectedFile.getNumFiles()+ "Files , "  + selectedFile.getNumFolders() + " Folders");
+        else
+            Methods.showProperties("File",selectedFile.getFile().getAbsolutePath(),size,
+                    created,null);
     }
     public void goDirectory(File file) {
         mainFrame.scrollPane.getViewport().remove(middlePanel);
@@ -313,6 +337,15 @@ public class Logic {
         mainFrame.scrollPane.getViewport().add(new MiddlePanel(this,file,""),BorderLayout.CENTER);
         mainFrame.setVisible(true);
         middlePanel.setVisible(true);
+        middlePanel.requestFocus();
+    }
+
+    public Memento getMemento() {
+        return memento;
+    }
+
+    public void setMemento(Memento memento) {
+        this.memento = memento;
     }
 
     public void openFile(File file) {

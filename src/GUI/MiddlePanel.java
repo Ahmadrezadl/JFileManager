@@ -29,13 +29,17 @@ public class MiddlePanel extends JPanel{
                 {
                     logic.clickUp();
                 }
+                if(e.getKeyCode() == KeyEvent.VK_F5)
+                {
+                    logic.clickRefresh();
+                }
             }
         });
         this.logic = logic;
         this.dir = f;
         this.setBackground(Color.WHITE);
         logic.setMiddlePanel(this);
-        NewFlowLayout layout = new NewFlowLayout(FlowLayout.LEFT);
+        NewFlowLayout layout = new NewFlowLayout(FlowLayout.LEFT,10,10);
         this.add(key);
         this.setLayout(layout);
         try{
@@ -110,6 +114,7 @@ public class MiddlePanel extends JPanel{
 
             }
         });
+        this.requestFocus();
         this.setVisible(true);
 
     }

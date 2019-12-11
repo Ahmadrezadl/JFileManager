@@ -64,7 +64,10 @@ public class FileButton extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (file.isDirectory())
+                {
+                    logic.getMemento().addRight(file.getParent());
                     logic.goDirectory(file);
+                }
                 else
                     logic.openFile(file);
             }
@@ -280,6 +283,10 @@ public class FileButton extends JPanel{
                         logic.goDirectory(file);
                     else
                         logic.openFile(file);
+                }
+                if(e.getKeyCode() == KeyEvent.VK_DELETE)
+                {
+                    logic.deleteSelectedItems();
                 }
 
             }

@@ -16,7 +16,11 @@ public class Methods {
     }
     public static void showProperties(String type,String location,String size,String created,String contains)
     {
+        if(contains != null)
         JOptionPane.showMessageDialog(null,"<html>Type: " + type + "<br>Location: " +  location + "<br>Size: " +
-                size + "<br>Created: " + created+ "<br>Contains: " + contains,"Properties" , JOptionPane.PLAIN_MESSAGE);
+            size + "<br>Created: " + created+ "<br>Contains: " + contains,"Properties" , JOptionPane.PLAIN_MESSAGE);
+        else
+            JOptionPane.showMessageDialog(null,"<html>Type: " + type + "<br>Location: " +  location + "<br>Size: " +
+                    size + "<br>Created: " + created,"Properties" , JOptionPane.PLAIN_MESSAGE);
     }
 }
