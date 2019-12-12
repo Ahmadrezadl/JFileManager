@@ -128,22 +128,29 @@ public class FileButton extends JPanel{
         });
         popupMenu.add(properties);
 
+        if(logic.isLarge())
+        {
+            try {
 
-        try {
-
-            icon = new ImageIcon(getBufferedImage(file));
-            button.setIcon(icon);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+                icon = new ImageIcon(getBufferedImage(file));
+                button.setIcon(icon);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
+        else
+        {
+            button.setIcon(logic.getFileSystemView().getSystemIcon(file));
+        }
+
         label = new JButton();
         button.setBorderPainted(false);
         button.setBorder(null);
         button.setForeground(null);
         button.setBackground(null);
-//        button.setFocusable(false);
         button.setFocusPainted(false);
         button.setContentAreaFilled(false);
+
         BasicFileAttributes infos = null;
 
         try {
@@ -177,14 +184,32 @@ public class FileButton extends JPanel{
         label.setBackground(null);
         label.setContentAreaFilled(false);
         label.setToolTipText(kilobytes+"KB");
-        if(logic.getFileSystemView().getSystemDisplayName(file).length() >= 26)
-            label.setText("<html>" + logic.getFileSystemView().getSystemDisplayName(file).substring(0,12) +"<br>"+ logic.getFileSystemView().getSystemDisplayName(file).substring(12,25)   +"...</html>");
-        else if(logic.getFileSystemView().getSystemDisplayName(file).length() <=14)
-            label.setText("<html>" + logic.getFileSystemView().getSystemDisplayName(file)+"<br></html>");
+        if(logic.isLarge())
+        {
+            if(logic.getFileSystemView().getSystemDisplayName(file).length() >= 23)
+                label.setText("<html>" + logic.getFileSystemView().getSystemDisplayName(file).substring(0,9) +"<br>"+ logic.getFileSystemView().getSystemDisplayName(file).substring(9,23)   +"...</html>");
+            else if(logic.getFileSystemView().getSystemDisplayName(file).length() <=11)
+                label.setText("<html>" + logic.getFileSystemView().getSystemDisplayName(file)+"<br></html>");
+            else
+                label.setText("<html>" + logic.getFileSystemView().getSystemDisplayName(file).substring(0,9) +"<br>"+ logic.getFileSystemView().getSystemDisplayName(file).substring(9) + "</html>");
+        }
         else
-            label.setText("<html>" + logic.getFileSystemView().getSystemDisplayName(file).substring(0,12) +"<br>"+ logic.getFileSystemView().getSystemDisplayName(file).substring(12) + "</html>");
-        this.add(button,BorderLayout.NORTH);
-        this.add(label,BorderLayout.SOUTH);
+        {
+            if(logic.getFileSystemView().getSystemDisplayName(file).length() >= 25)
+                button.setText("<html>" + logic.getFileSystemView().getSystemDisplayName(file).substring(0,22)+"...</html>");
+            else
+                button.setText("<html>" + logic.getFileSystemView().getSystemDisplayName(file) + "</html>");
+        }
+        if(logic.isLarge())
+        {
+            this.add(button,BorderLayout.NORTH);
+            this.add(label,BorderLayout.SOUTH);
+        }
+        else
+        {
+            this.add(button,BorderLayout.WEST);
+            this.add(label,BorderLayout.CENTER);
+        }
         MouseListener mouseclick = (new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -235,40 +260,17 @@ public class FileButton extends JPanel{
         });
         button.addMouseListener(mouseclick);
         label.addMouseListener(mouseclick);
-        label.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                if(logic.getSelectedFile().equals(self))
-                    logic.rename();
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
-        });
         button.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
                 if (logic.getSelectedFile() != null)
+                {
                     logic.getSelectedFile().setBackground(Color.WHITE);
+                }
+
                 logic.setSelectedFile(self);
-                self.setBackground(new Color(0x3500A3));
+                self.setBackground(new Color(0x757BFF));
+
             }
 
             @Override
@@ -319,6 +321,7 @@ public class FileButton extends JPanel{
 
             }
         });
+        this.setMaximumSize(new Dimension(new Dimension(2000,32)));
         this.setVisible(true);
     }
 

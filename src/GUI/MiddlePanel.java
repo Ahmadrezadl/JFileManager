@@ -40,17 +40,29 @@ public class MiddlePanel extends JPanel{
         this.dir = f;
         this.setBackground(Color.WHITE);
         logic.setMiddlePanel(this);
-        NewFlowLayout layout = new NewFlowLayout(FlowLayout.LEFT,10,10);
+
+        if(logic.isLarge())
+        {
+            NewFlowLayout layout = new NewFlowLayout(FlowLayout.LEFT,10,10);
+            this.setLayout(layout);
+        }
+        else
+        {
+            this.setLayout(new BoxLayout(logic.getMiddlePanel(),BoxLayout.Y_AXIS));
+        }
+
         this.add(key);
-        this.setLayout(layout);
         try{
             File[] files = logic.getFileSystemView().getFiles(f, true);
+            double loadingValue = 1/(double)files.length * 100;
+            logic.loaded = 0.0;
             logic.getLink().setText(f.toString());
             for(File file : files)
             {
                 if((search.equals("") || file.getName().toLowerCase().contains(search)))
                 {
                     addFile(file.getPath());
+                    logic.loaded += loadingValue;
                 }
             }
         }

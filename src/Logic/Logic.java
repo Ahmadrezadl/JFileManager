@@ -15,7 +15,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class Logic {
+public class Logic{
+    private boolean isLarge;
     private MiddlePanel middlePanel;
     private MainFrame mainFrame;
     private MenusPanel menusPanel;
@@ -28,15 +29,20 @@ public class Logic {
     public ArrayList<String> addresses;
     public KeyListener focusManager;
     public int where;
+    private BottomBar bottomBar;
     private Memento memento;
     private JLabel fileInfo;
     private File copiedFile;
     private boolean cuted;
+    public Double loaded;
+    private LeftPanel leftPanel;
 
     public Logic(){
         fileSystemView = FileSystemView.getFileSystemView();
         desktop = Desktop.getDesktop();
+        loaded = 0.0;
         where = 0;
+        isLarge = false;
         cuted = false;
         memento = new Memento();
         addresses = new ArrayList<>();
@@ -102,6 +108,10 @@ public class Logic {
     }
 
     public void setSelectedFile(FileButton selectedFile) {
+        if(selectedFile != null)
+        bottomBar.getFileInfo().setText("1 File selected: " + selectedFile.getFile().getName() + " | Size: " +selectedFile.megabytes + "(MB)");
+        else
+            bottomBar.getFileInfo().setText("No file selected");
         this.selectedFile = selectedFile;
     }
 
@@ -299,6 +309,14 @@ public class Logic {
         clickRefresh();
     }
 
+    public boolean isLarge() {
+        return isLarge;
+    }
+
+    public void setLarge(boolean large) {
+        isLarge = large;
+    }
+
     public  void aboutUs(){
         System.out.println("aboutUs clicked");
         // TODO: 12/1/2019
@@ -446,5 +464,23 @@ public class Logic {
 
     public JLabel getFileInfo() {
         return fileInfo;
+    }
+
+    public BottomBar getBottomBar() {
+        return bottomBar;
+    }
+
+    public void setBottomBar(BottomBar bottomBar) {
+        this.bottomBar = bottomBar;
+
+    }
+
+
+    public void setLeftPanel(LeftPanel leftPanel) {
+        this.leftPanel = leftPanel;
+    }
+
+    public LeftPanel getLeftPanel() {
+        return leftPanel;
     }
 }
