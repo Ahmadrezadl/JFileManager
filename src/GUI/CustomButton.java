@@ -23,8 +23,12 @@ public class CustomButton extends JButton {
         try {
             icon1 = ImageIO.read(getClass().getResource("..\\Sprites\\" + image1));
             icon2 = ImageIO.read(getClass().getResource("..\\Sprites\\" + image2));
-            icon1 = icon1.getScaledInstance(size,size,1);
-            icon2 = icon2.getScaledInstance(size,size,1);
+            if(size != 0)
+            {
+                icon1 = icon1.getScaledInstance(size,size,1);
+                icon2 = icon2.getScaledInstance(size,size,1);
+            }
+
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -33,27 +33,22 @@ public class LeftPanel extends JPanel {
         JScrollPane scroll = new JScrollPane(tree);
         scroll.setPreferredSize(new Dimension(300, 300));
         this.add(scroll);
-        tree.addTreeSelectionListener(new TreeSelectionListener() {
-            @Override
-            public void valueChanged(TreeSelectionEvent e) {
-                String node = e.getPath().toString();
-                node = node.substring(9,node.length()-1);
-                String nodes[] = node.split(", ");
-                String pathFile = nodes[0].substring(1);
-                for(int i = 1;i < nodes.length;i++)
-                pathFile+= "\\" + nodes[i];
-//                node = node.replaceAll(", " , "\\");
-                System.out.println(pathFile);
-                DefaultMutableTreeNode selectedNode =
-                        (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+        tree.addTreeSelectionListener(e -> {
+            String node = e.getPath().toString();
+            node = node.substring(9,node.length()-1);
+            String[] nodes = node.split(", ");
+            String pathFile = nodes[0].substring(1);
+            for(int i = 1;i < nodes.length;i++)
+            pathFile+= "\\" + nodes[i];
+            System.out.println(pathFile);
+            DefaultMutableTreeNode selectedNode =
+                    (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 
-                File[] tmp = logic.getFileSystemView().getFiles(new File(pathFile),true);
-                for(File f : tmp)
-                {
-//                    System.out.println(f.getName());
-                    selectedNode.add(new DefaultMutableTreeNode(f.getName()));
-                    logic.goDirectory(new File (pathFile));
-                }
+            File[] tmp = logic.getFileSystemView().getFiles(new File(pathFile),true);
+            for(File f : tmp)
+            {
+                selectedNode.add(new DefaultMutableTreeNode(f.getName()));
+                logic.goDirectory(new File (pathFile));
             }
         });
     }

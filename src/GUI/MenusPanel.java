@@ -95,6 +95,7 @@ public class MenusPanel extends JPanel {
         JMenu help = new JMenu("Help",true);
         jMenuBar.add(help);
         JMenuItem aboutUs = new JMenuItem("About Us");
+
         JMenuItem options = new JMenuItem("Options");
         JMenuItem info = new JMenuItem("Info");
         help.add(aboutUs); help.add(options); help.add(info);

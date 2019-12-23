@@ -13,7 +13,7 @@ public class MainFrame extends JFrame {
     public MainFrame(Logic logic){
         super("JFileManager");
         this.logic = logic;
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setMinimumSize(new Dimension(800,800));
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         logic.setMainFrame(this);

@@ -2,6 +2,7 @@ package Logic;
 
 import GUI.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
@@ -42,7 +43,7 @@ public class Logic{
         desktop = Desktop.getDesktop();
         loaded = 0.0;
         where = 0;
-        isLarge = false;
+        isLarge = true;
         cuted = false;
         memento = new Memento();
         addresses = new ArrayList<>();
@@ -318,18 +319,29 @@ public class Logic{
     }
 
     public  void aboutUs(){
-        System.out.println("aboutUs clicked");
-        // TODO: 12/1/2019
+        JOptionPane.showMessageDialog(null,"Sara Kheirolahi AP Project." , "About us" , JOptionPane.PLAIN_MESSAGE);
     }
 
     public  void options(){
-        System.out.println("options clicked");
-        // TODO: 12/1/2019
+
     }
 
     public  void info(){
-        System.out.println("info clicked");
-        // TODO: 12/1/2019
+        JFrame jFrame = new JFrame("Info");
+        JLabel Logo = new JLabel();
+        Image logo = null;
+        try {
+            logo = ImageIO.read(getClass().getResource("..\\sprites\\jfilemanager.png"));
+            Logo.setIcon(new ImageIcon(logo));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        jFrame.add(Logo);
+        jFrame.setSize(900,500);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        jFrame.setResizable(false);
+        jFrame.setLocation(dim.width/2-jFrame.getSize().width/2, dim.height/2-jFrame.getSize().height/2);
+        jFrame.setVisible(true);
     }
     public void changeUrlText(String newUrl){
         search.setText(newUrl);

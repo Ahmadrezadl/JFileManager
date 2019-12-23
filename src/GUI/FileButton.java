@@ -210,6 +210,7 @@ public class FileButton extends JPanel{
             this.add(button,BorderLayout.WEST);
             this.add(label,BorderLayout.CENTER);
         }
+
         MouseListener mouseclick = (new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
