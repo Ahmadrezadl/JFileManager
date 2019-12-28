@@ -319,7 +319,7 @@ public class Logic{
     }
 
     public  void aboutUs(){
-        JOptionPane.showMessageDialog(null,"Sara Kheirolahi AP Project." , "About us" , JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(null,"Ahmadrezadl.github.io" , "About us" , JOptionPane.PLAIN_MESSAGE);
     }
 
     public  void options(){
